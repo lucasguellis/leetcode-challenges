@@ -2,7 +2,7 @@ package ReverseInteger;
 
 class Solution {
     public static int reverse(int x) {
-        String x_str = Integer.toString(x);
+        String x_str = Integer.toString(Math.abs(x));
         int length = x_str.length();
         String[] reversed_chars = new String[length];
 
@@ -12,33 +12,35 @@ class Solution {
 
         String reversed_x = String.join("", reversed_chars);
 
-        return Integer.parseInt(reversed_x);
+        try {
+            if (x >= 0) return Integer.parseInt(reversed_x);
+            else return -Integer.parseInt(reversed_x);
+        } catch (NumberFormatException error) {
+            return 0;
+        }
     }
 
     public static int reverse2(int x) {
         int reversed = 0;
+        boolean negative = false;
+
+        if (x < 0) {
+            x = -x;
+            negative = true;
+        };
 
         while (x > 0) {
+            if (reversed > ((Integer.MAX_VALUE - (x % 10)) / 10)) return 0;
+
             reversed = reversed * 10 + x % 10;
-            if (reversed < Integer.MIN_VALUE / 10 || reversed > Integer.MAX_VALUE / 10) return 0;
             x /= 10;
         }
 
-        return reversed;
+        return negative ? -reversed : reversed;
     }
 
     public static void main(String[] args) {
-        int result0 = reverse2(2234674);
-        System.out.println(result0);
-        int result1 = reverse2(-2234674);
-        System.out.println(result1);
-        int result2 = reverse2(2147483647);
-        System.out.println(result2);
-        int result3 = reverse2(-2147483648);
-        System.out.println(result3);
-        int result4 = reverse2(2147483641);
-        System.out.println(result4);
-        int result5 = reverse2(1463847412);
-        System.out.println(result5);
+        int result = reverse2(2234674);
+        System.out.println(result == 4764322);
     }
 }
